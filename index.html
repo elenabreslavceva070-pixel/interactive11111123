@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ПБУ 9/99 → ФСБУ 9/2025 | Тренажёр</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef3f8 0%, #dfe6ed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'SF Pro Text', 'Roboto', sans-serif;
+            padding: 2rem 1.5rem;
+        }
+
+        .trainer-container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .trainer-header {
+            padding: 2rem 2rem 0.75rem 2rem;
+            border-bottom: 1px solid #eef2f5;
+            background: #ffffff;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1C2E3A 0%, #2C4C6C 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        /* панель переключателя — минимализм */
+        .toggle-panel {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eef2f5;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: #ffffff;
+            padding: 0.35rem;
+            border-radius: 60px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(149,202,250,0.4);
+        }
+
+        .switch-option {
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            padding: 0.5rem 1.6rem;
+            border-radius: 40px;
+            user-select: none;
+            text-align: center;
+            font-family: inherit;
+            letter-spacing: 0.2px;
+        }
+
+        .switch-option.active {
+            background: #95CAFA;
+            color: #1f2f3c;
+            box-shadow: 0 2px 8px rgba(149,202,250,0.3);
+        }
+
+        .switch-option:first-child {
+            color: #4b6a84;
+        }
+        .switch-option:last-child {
+            color: #1a5d8c;
+        }
+        .switch-option.active:first-child,
+        .switch-option.active:last-child {
+            color: #1E2F3A;
+        }
+
+        /* таблица */
+        .comparison-table-wrapper {
+            padding: 0 2rem 2rem 2rem;
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+
+        .comparison-table thead tr {
+            background: transparent;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 1rem 1rem 0.8rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1f3b4c;
+            border-bottom: 2px solid #e2e9f0;
+            letter-spacing: -0.2px;
+        }
+
+        /* каждая ячейка в рамке #95CAFA */
+        .comparison-table td {
+            background-color: #ffffff;
+            padding: 1rem 1rem;
+            vertical-align: top;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            border-radius: 20px;
+            border: 1px solid #95CAFA;
+            transition: all 0.2s ease;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 550;
+            background-color: #fefefe;
+            border-left: 3px solid #95CAFA;
+        }
+
+        .comparison-table tr:hover td {
+            transform: scale(1.002);
+            box-shadow: 0 8px 18px rgba(149,202,250,0.12), 0 0 0 1px #95CAFA;
+            transition: all 0.2s;
+        }
+
+        .fade-transition {
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .comparison-table td, .comparison-table th {
+                padding: 0.8rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .toggle-panel {
+                justify-content: center;
+                padding: 0.75rem 1rem;
+            }
+            .switch-option {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="trainer-container">
+    <div class="trainer-header">
+        <h1>ПБУ 9/99 → ФСБУ 9/2025</h1>
+    </div>
+
+    <div class="toggle-panel">
+        <div class="switch-wrapper" id="toggleSwitchWrapper">
+            <div class="switch-option active" data-mode="old">ПБУ 9/99</div>
+            <div class="switch-option" data-mode="new">ФСБУ 9/2025</div>
+        </div>
+    </div>
+
+    <div class="comparison-table-wrapper">
+        <table class="comparison-table" id="comparisonTable">
+            <thead>
+                <tr>
+                    <th>Что сравниваем</th>
+                    <th id="activeStandardHeader"></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- динамическое заполнение -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Данные строго по скорректированной таблице (учтены правки формулировок)
+    const comparisonData = [
+        {
+            criterion: "Как делить доходы",
+            old: "Есть выручка и прочие доходы",
+            new: "Доходы делим на: выручку, доходы, отличные от выручки, и доходы, не включаемые в чистую прибыль/убыток"
+        },
+        {
+            criterion: "Главный принцип признания выручки",
+            old: "Ориентируюемся на переход права собственности",
+            new: "Ориентируемся на передачу контроля над продукцией"
+        },
+        {
+            criterion: "Авансы от клиентов",
+            old: "Отражаем как авансы",
+            new: "Выделяем как обязательства перед покупателями до того момента, как исполним договор"
+        },
+        {
+            criterion: "Скидки и бонусы",
+            old: "Учитываем проще, без детальной договорной логики",
+            new: "Учитываем, когда определяем цены договора и выручки"
+        },
+        {
+            criterion: "Долгосрочные договоры",
+            old: "Учет менее детализирован",
+            new: "Есть четкие правила для выручки по мере исполнения обязательств"
+        },
+        {
+            criterion: "Раскрытие в отчетности",
+            old: "Не детализируем",
+            new: "Раскрываем подробно: выручка за период, сверки задолженности, обязательства по договорам, методы признания выручки"
+        },
+        {
+            criterion: "Логика учета",
+            old: "Традиционная российская модель",
+            new: "Более современная модель, ближе к международной"
+        }
+    ];
+
+    let currentMode = "old";   // old = ПБУ 9/99, new = ФСБУ 9/2025
+    const tableBody = document.getElementById('tableBody');
+    const activeStandardHeader = document.getElementById('activeStandardHeader');
+    const toggleOptions = document.querySelectorAll('.switch-option');
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Получить контент ячейки (чистый текст, без лишних смайлов и украшений)
+    function getCellContent(mode, item) {
+        if (mode === 'old') {
+            return escapeHtml(item.old);
+        } else {
+            return escapeHtml(item.new);
+        }
+    }
+
+    function renderTable() {
+        let html = '';
+        for (let item of comparisonData) {
+            const content = getCellContent(currentMode, item);
+            html += `
+                <tr>
+                    <td>${escapeHtml(item.criterion)}</td>
+                    <td class="value-cell">${content}</td>
+                </tr>
+            `;
+        }
+        // небольшая анимация при смене содержимого
+        if (tableBody) {
+            tableBody.style.opacity = '0.6';
+            setTimeout(() => {
+                tableBody.innerHTML = html;
+                tableBody.style.opacity = '1';
+                const cells = document.querySelectorAll('.value-cell');
+                cells.forEach(cell => cell.classList.add('fade-transition'));
+            }, 70);
+        } else {
+            tableBody.innerHTML = html;
+        }
+        // обновляем заголовок второй колонки в соответствии с режимом
+        if (currentMode === 'old') {
+            activeStandardHeader.textContent = 'ПБУ 9/99';
+            activeStandardHeader.style.color = '#2c4f6e';
+            activeStandardHeader.style.borderBottom = '3px solid #95CAFA';
+        } else {
+            activeStandardHeader.textContent = 'ФСБУ 9/2025';
+            activeStandardHeader.style.color = '#1f5a44';
+            activeStandardHeader.style.borderBottom = '3px solid #95CAFA';
+        }
+        
+        // лёгкий эффект "нажатия" на таблицу
+        const wrapper = document.querySelector('.comparison-table-wrapper');
+        if (wrapper) {
+            wrapper.style.transform = 'scale(1.002)';
+            setTimeout(() => { if(wrapper) wrapper.style.transform = 'scale(1)'; }, 120);
+        }
+    }
+
+    function setActiveMode(mode) {
+        currentMode = mode;
+        toggleOptions.forEach(opt => {
+            const optMode = opt.getAttribute('data-mode');
+            if (optMode === mode) {
+                opt.classList.add('active');
+            } else {
+                opt.classList.remove('active');
+            }
+        });
+        renderTable();
+    }
+
+    // обработчики для переключателей
+    toggleOptions.forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            const mode = opt.getAttribute('data-mode');
+            if (mode === 'old') setActiveMode('old');
+            else if (mode === 'new') setActiveMode('new');
+            
+            // визуальный отклик кнопки
+            const panel = document.querySelector('.switch-wrapper');
+            if (panel) {
+                panel.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(panel) panel.style.transform = 'scale(1)'; }, 100);
+            }
+        });
+    });
+
+    // инициализация: показываем ПБУ 9/99 (старый вариант)
+    setActiveMode('old');
+
+    // дополнительные стили для рамок и аккуратного отображения
+    const style = document.createElement('style');
+    style.textContent = `
+        .value-cell {
+            transition: all 0.2s;
+        }
+        .comparison-table tr:hover .value-cell {
+            background: #FCFEFF;
+            box-shadow: inset 0 0 0 1px #b8dafb;
+        }
+        .switch-option {
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .switch-option:hover {
+            background: #e2f0ff;
+            transform: translateY(-1px);
+        }
+        .comparison-table td:first-child {
+            font-weight: 550;
+            background-color: #FCFDFE;
+        }
+        #tableBody {
+            transition: opacity 0.16s ease;
+        }
+        .trainer-container {
+            transition: box-shadow 0.2s;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // поддержка навигации стрелками (влево/вправо) для удобства
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            setActiveMode('old');
+            e.preventDefault();
+        } else if (e.key === 'ArrowRight') {
+            setActiveMode('new');
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>
