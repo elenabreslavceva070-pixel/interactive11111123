@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ПБУ 9/99 → ФСБУ 9/2025 | Тренажёр</title>
+    <title>Тренажёр: ПБУ 9/99 — ФСБУ 9/2025</title>
     <style>
         * {
             margin: 0;
@@ -28,32 +28,15 @@
             border-radius: 2rem;
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.02);
             overflow: hidden;
-            transition: all 0.2s;
         }
 
-        .trainer-header {
-            padding: 2rem 2rem 0.75rem 2rem;
-            border-bottom: 1px solid #eef2f5;
-            background: #ffffff;
-        }
-
-        h1 {
-            font-size: 1.85rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #1C2E3A 0%, #2C4C6C 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 0.25rem;
-        }
-
-        /* панель переключателя — минимализм */
+        /* панель переключателя */
         .toggle-panel {
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem 0.75rem 2rem;
             border-bottom: 1px solid #eef2f5;
             display: flex;
             justify-content: flex-end;
+            background: #ffffff;
         }
 
         .switch-wrapper {
@@ -106,6 +89,17 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0 12px;
+            table-layout: fixed;
+        }
+
+        /* Ширина колонок: первая 34%, вторая 66% */
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            width: 34%;
+        }
+        .comparison-table th:last-child,
+        .comparison-table td:last-child {
+            width: 66%;
         }
 
         .comparison-table thead tr {
@@ -122,62 +116,77 @@
             letter-spacing: -0.2px;
         }
 
-        /* каждая ячейка в рамке #95CAFA */
+        /* Базовые стили ячеек — единый комфортный размер */
         .comparison-table td {
             background-color: #ffffff;
-            padding: 1rem 1rem;
-            vertical-align: top;
-            font-size: 0.95rem;
-            line-height: 1.45;
+            padding: 0.85rem 1rem;
+            vertical-align: middle;
             border-radius: 20px;
             border: 1px solid #95CAFA;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            word-break: break-word;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            font-family: inherit;
         }
-
+        
+        /* Первая колонка (Что сравниваем) — статичная */
         .comparison-table td:first-child {
             font-weight: 550;
             background-color: #fefefe;
             border-left: 3px solid #95CAFA;
         }
-
-        .comparison-table tr:hover td {
-            transform: scale(1.002);
-            box-shadow: 0 8px 18px rgba(149,202,250,0.12), 0 0 0 1px #95CAFA;
-            transition: all 0.2s;
+        
+        /* Вторая колонка */
+        .comparison-table td:last-child {
+            background-color: #ffffff;
+            font-weight: 400;
         }
 
+        /* При наведении — мягкий эффект без изменения размеров */
+        .comparison-table tr:hover td {
+            background: #fafdff;
+            box-shadow: 0 8px 18px rgba(149,202,250,0.12), 0 0 0 1px #95CAFA;
+        }
+
+        /* анимация плавной смены контента */
         .fade-transition {
-            transition: opacity 0.2s ease-in-out;
+            transition: opacity 0.15s ease-in-out;
+        }
+
+        /* Скрываем второй заголовок */
+        .comparison-table thead tr th:last-child {
+            display: none;
         }
 
         @media (max-width: 760px) {
             body {
                 padding: 1rem;
             }
-            .comparison-table td, .comparison-table th {
-                padding: 0.8rem 0.8rem;
+            .comparison-table td,
+            .comparison-table th {
+                padding: 0.7rem 0.8rem;
                 font-size: 0.85rem;
-            }
-            h1 {
-                font-size: 1.4rem;
             }
             .toggle-panel {
                 justify-content: center;
-                padding: 0.75rem 1rem;
+                padding: 1rem 1rem 0.5rem;
             }
             .switch-option {
                 padding: 0.4rem 1.2rem;
                 font-size: 0.85rem;
+            }
+            .comparison-table td:first-child {
+                width: 40%;
+            }
+            .comparison-table td:last-child {
+                width: 60%;
             }
         }
     </style>
 </head>
 <body>
 <div class="trainer-container">
-    <div class="trainer-header">
-        <h1>ПБУ 9/99 → ФСБУ 9/2025</h1>
-    </div>
-
     <div class="toggle-panel">
         <div class="switch-wrapper" id="toggleSwitchWrapper">
             <div class="switch-option active" data-mode="old">ПБУ 9/99</div>
@@ -190,18 +199,18 @@
             <thead>
                 <tr>
                     <th>Что сравниваем</th>
-                    <th id="activeStandardHeader"></th>
+                    <th style="display: none;"></th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <!-- динамическое заполнение -->
+                <!-- Таблица заполняется сразу -->
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // Данные строго по скорректированной таблице (учтены правки формулировок)
+    // Данные строго по скорректированной таблице
     const comparisonData = [
         {
             criterion: "Как делить доходы",
@@ -240,10 +249,12 @@
         }
     ];
 
-    let currentMode = "old";   // old = ПБУ 9/99, new = ФСБУ 9/2025
+    let currentMode = "old";
     const tableBody = document.getElementById('tableBody');
-    const activeStandardHeader = document.getElementById('activeStandardHeader');
     const toggleOptions = document.querySelectorAll('.switch-option');
+    
+    // Хранилище фиксированных высот строк (единых для обоих режимов)
+    let fixedRowHeights = [];
 
     function escapeHtml(str) {
         if (!str) return '';
@@ -255,58 +266,107 @@
         });
     }
 
-    // Получить контент ячейки (чистый текст, без лишних смайлов и украшений)
-    function getCellContent(mode, item) {
-        if (mode === 'old') {
-            return escapeHtml(item.old);
-        } else {
-            return escapeHtml(item.new);
-        }
+    function getDynamicContent(mode, item) {
+        return mode === 'old' ? escapeHtml(item.old) : escapeHtml(item.new);
     }
 
+    // Измеряем текущие высоты строк
+    function captureRowHeights() {
+        const rows = document.querySelectorAll('#tableBody tr');
+        fixedRowHeights = [];
+        rows.forEach(row => {
+            const height = row.getBoundingClientRect().height;
+            fixedRowHeights.push(height > 20 ? height : 75);
+        });
+    }
+
+    // Применяем зафиксированные высоты
+    function applyFixedHeights() {
+        const rows = document.querySelectorAll('#tableBody tr');
+        if (fixedRowHeights.length !== rows.length) return;
+        
+        rows.forEach((row, idx) => {
+            const h = fixedRowHeights[idx];
+            if (h && h > 0) {
+                row.style.minHeight = h + 'px';
+                row.style.height = h + 'px';
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    cell.style.minHeight = h + 'px';
+                });
+            }
+        });
+    }
+
+    // Сброс фиксированных высот
+    function resetFixedHeights() {
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(row => {
+            row.style.minHeight = '';
+            row.style.height = '';
+            const cells = row.querySelectorAll('td');
+            cells.forEach(cell => {
+                cell.style.minHeight = '';
+            });
+        });
+    }
+
+    // Рендер с сохранением единой высоты
     function renderTable() {
+        // Перед сменой контента сохраняем текущие высоты (если они уже есть)
+        if (fixedRowHeights.length === comparisonData.length) {
+            captureRowHeights();
+        }
+        
         let html = '';
         for (let item of comparisonData) {
-            const content = getCellContent(currentMode, item);
+            const dynamicText = getDynamicContent(currentMode, item);
             html += `
                 <tr>
-                    <td>${escapeHtml(item.criterion)}</td>
-                    <td class="value-cell">${content}</td>
+                    <td class="static-cell">${escapeHtml(item.criterion)}</td>
+                    <td class="value-cell">${dynamicText}</td>
                 </tr>
             `;
         }
-        // небольшая анимация при смене содержимого
+        
         if (tableBody) {
-            tableBody.style.opacity = '0.6';
+            tableBody.style.opacity = '0.5';
             setTimeout(() => {
                 tableBody.innerHTML = html;
                 tableBody.style.opacity = '1';
-                const cells = document.querySelectorAll('.value-cell');
-                cells.forEach(cell => cell.classList.add('fade-transition'));
-            }, 70);
+                
+                requestAnimationFrame(() => {
+                    // Если уже есть зафиксированные высоты — применяем их
+                    if (fixedRowHeights.length === comparisonData.length) {
+                        applyFixedHeights();
+                    } else {
+                        // Первый рендер: измеряем и фиксируем
+                        captureRowHeights();
+                        applyFixedHeights();
+                    }
+                    
+                    const cells = document.querySelectorAll('.value-cell');
+                    cells.forEach(cell => cell.classList.add('fade-transition'));
+                    setTimeout(() => {
+                        cells.forEach(cell => cell.classList.remove('fade-transition'));
+                    }, 150);
+                });
+            }, 20);
         } else {
             tableBody.innerHTML = html;
-        }
-        // обновляем заголовок второй колонки в соответствии с режимом
-        if (currentMode === 'old') {
-            activeStandardHeader.textContent = 'ПБУ 9/99';
-            activeStandardHeader.style.color = '#2c4f6e';
-            activeStandardHeader.style.borderBottom = '3px solid #95CAFA';
-        } else {
-            activeStandardHeader.textContent = 'ФСБУ 9/2025';
-            activeStandardHeader.style.color = '#1f5a44';
-            activeStandardHeader.style.borderBottom = '3px solid #95CAFA';
+            captureRowHeights();
+            applyFixedHeights();
         }
         
-        // лёгкий эффект "нажатия" на таблицу
         const wrapper = document.querySelector('.comparison-table-wrapper');
         if (wrapper) {
-            wrapper.style.transform = 'scale(1.002)';
+            wrapper.style.transform = 'scale(1.001)';
             setTimeout(() => { if(wrapper) wrapper.style.transform = 'scale(1)'; }, 120);
         }
     }
 
     function setActiveMode(mode) {
+        if (currentMode === mode) return;
         currentMode = mode;
         toggleOptions.forEach(opt => {
             const optMode = opt.getAttribute('data-mode');
@@ -319,14 +379,13 @@
         renderTable();
     }
 
-    // обработчики для переключателей
+    // Обработчики переключателей
     toggleOptions.forEach(opt => {
         opt.addEventListener('click', (e) => {
             const mode = opt.getAttribute('data-mode');
             if (mode === 'old') setActiveMode('old');
             else if (mode === 'new') setActiveMode('new');
             
-            // визуальный отклик кнопки
             const panel = document.querySelector('.switch-wrapper');
             if (panel) {
                 panel.style.transform = 'scale(0.98)';
@@ -335,40 +394,101 @@
         });
     });
 
-    // инициализация: показываем ПБУ 9/99 (старый вариант)
-    setActiveMode('old');
-
-    // дополнительные стили для рамок и аккуратного отображения
+    // ========== КЛЮЧЕВОЕ РЕШЕНИЕ: сначала рендерим ФСБУ, замеряем компактную высоту, затем переключаем на ПБУ с этой же высотой ==========
+    // Шаг 1: временно показываем ФСБУ, чтобы получить желаемую компактную высоту строк
+    // Шаг 2: запоминаем эти высоты
+    // Шаг 3: переключаем на ПБУ, но применяем сохранённые компактные высоты
+    
+    function initializeWithFixedHeightFromFSBU() {
+        // Сначала рендерим таблицу с ФСБУ (более короткие формулировки)
+        let tempHtml = '';
+        for (let item of comparisonData) {
+            tempHtml += `
+                <tr>
+                    <td class="static-cell">${escapeHtml(item.criterion)}</td>
+                    <td class="value-cell">${escapeHtml(item.new)}</td>
+                </tr>
+            `;
+        }
+        tableBody.innerHTML = tempHtml;
+        tableBody.style.opacity = '1';
+        
+        // Ждём отрисовки и замеряем компактные высоты
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                captureRowHeights();   // теперь fixedRowHeights = компактная высота как у ФСБУ
+                // После того как высоты сохранены, переключаем на ПБУ, но применяем эти же высоты
+                currentMode = "old";
+                // Обновляем активную кнопку
+                toggleOptions.forEach(opt => {
+                    if (opt.getAttribute('data-mode') === 'old') {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
+                // Рендерим ПБУ с фиксацией высоты
+                let pbuHtml = '';
+                for (let item of comparisonData) {
+                    pbuHtml += `
+                        <tr>
+                            <td class="static-cell">${escapeHtml(item.criterion)}</td>
+                            <td class="value-cell">${escapeHtml(item.old)}</td>
+                        </tr>
+                    `;
+                }
+                tableBody.innerHTML = pbuHtml;
+                tableBody.style.opacity = '1';
+                // Применяем сохранённые компактные высоты
+                applyFixedHeights();
+                
+                // Небольшая анимация появления
+                const cells = document.querySelectorAll('.value-cell');
+                cells.forEach(cell => cell.classList.add('fade-transition'));
+                setTimeout(() => {
+                    cells.forEach(cell => cell.classList.remove('fade-transition'));
+                }, 150);
+            }, 15);
+        });
+    }
+    
+    // Запускаем инициализацию с фиксацией высоты от ФСБУ
+    initializeWithFixedHeightFromFSBU();
+    
+    // Дополнительные стили
     const style = document.createElement('style');
     style.textContent = `
-        .value-cell {
-            transition: all 0.2s;
+        .comparison-table td {
+            box-sizing: border-box;
         }
-        .comparison-table tr:hover .value-cell {
-            background: #FCFEFF;
-            box-shadow: inset 0 0 0 1px #b8dafb;
-        }
-        .switch-option {
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .switch-option:hover {
-            background: #e2f0ff;
-            transform: translateY(-1px);
-        }
-        .comparison-table td:first-child {
+        .static-cell {
             font-weight: 550;
-            background-color: #FCFDFE;
+        }
+        .value-cell {
+            font-weight: 400;
         }
         #tableBody {
-            transition: opacity 0.16s ease;
+            transition: opacity 0.2s ease;
         }
-        .trainer-container {
-            transition: box-shadow 0.2s;
+        .comparison-table tr {
+            transition: none;
+        }
+        .fade-transition {
+            opacity: 1;
+        }
+        .comparison-table tr:hover td {
+            transform: none;
         }
     `;
     document.head.appendChild(style);
     
-    // поддержка навигации стрелками (влево/вправо) для удобства
+    // Скрываем второй заголовок
+    const secondHeader = document.querySelector('#comparisonTable thead tr th:last-child');
+    if (secondHeader) {
+        secondHeader.style.display = 'none';
+    }
+    
+    // Клавиатурная навигация
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
             setActiveMode('old');
@@ -377,6 +497,52 @@
             setActiveMode('new');
             e.preventDefault();
         }
+    });
+    
+    // При изменении размера окна пересчитываем, но сохраняем ту же логику компактности
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (fixedRowHeights.length === comparisonData.length) {
+                resetFixedHeights();
+                setTimeout(() => {
+                    // Перемеряем текущую высоту (она может стать другой из-за ширины)
+                    // Но сохраняем принцип: высота должна быть как у ФСБУ при текущей ширине
+                    // Для этого временно покажем ФСБУ, замерим, вернём текущий режим
+                    const wasMode = currentMode;
+                    // Временно переключаем на ФСБУ для замера
+                    let fsbuHtml = '';
+                    for (let item of comparisonData) {
+                        fsbuHtml += `
+                            <tr>
+                                <td class="static-cell">${escapeHtml(item.criterion)}</td>
+                                <td class="value-cell">${escapeHtml(item.new)}</td>
+                            </tr>
+                        `;
+                    }
+                    tableBody.innerHTML = fsbuHtml;
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            captureRowHeights();
+                            // Возвращаемся к исходному режиму с новыми высотами
+                            let modeHtml = '';
+                            for (let item of comparisonData) {
+                                const content = wasMode === 'old' ? escapeHtml(item.old) : escapeHtml(item.new);
+                                modeHtml += `
+                                    <tr>
+                                        <td class="static-cell">${escapeHtml(item.criterion)}</td>
+                                        <td class="value-cell">${content}</td>
+                                    </tr>
+                                `;
+                            }
+                            tableBody.innerHTML = modeHtml;
+                            applyFixedHeights();
+                        }, 10);
+                    });
+                }, 30);
+            }
+        }, 150);
     });
 </script>
 </body>
